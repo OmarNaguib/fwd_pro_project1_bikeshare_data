@@ -171,5 +171,3 @@ def main():
 
 if __name__ == "__main__":
 	main()
-    
-df = load_data("chicago", "all", "all").drop("Unnamed: 0",axis=1)
