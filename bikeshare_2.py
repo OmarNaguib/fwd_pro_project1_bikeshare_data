@@ -34,7 +34,7 @@ def get_filters():
         if day not in ["all","monday","tuesday","wednesday","thursday","friday","saturday","sunday"]: print("that's not valid")
         else: break
     print('-'*40)
-    return city, month, day
+    return city.lower(), month.lower(), day.lower()
 
 
 def load_data(city, month, day):
@@ -109,7 +109,7 @@ def station_stats(df):
     print(df["End Station"].mode()[0])
 
     # display most frequent combination of start station and end station trip
-    df["Start Station"]+ " To "+df["End Station"]
+    print(("From " + df["Start Station"]+ " To "+ df["End Station"]).mode()[0])
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
@@ -152,6 +152,24 @@ def user_stats(df):
 
     print("\nThis took %s seconds." % (time.time() - start_time))
     print('-'*40)
+    
+def raw_data(df):
+    """displays data from a data frame 5 rows at a time, corrects for IndexError and ivalid input"""
+    start_row=0
+    #use a try except block to prevent an index error at the final rows
+    while True:
+        view_data = input('\nWould you like to view 5 rows of individual trip data? Enter yes or no\n').lower()
+        if view_data == "yes":
+            try:
+                print(df.iloc[start_row:start_row+5])
+                start_row+=5
+            except IndexError :
+                print(df.iloc[start_row:])
+                print("All availiable data has been displayed")
+                break
+        elif view_data== "no": break
+        else: print("invalid input, please Try again")
+    
 
 
 def main():
@@ -162,7 +180,8 @@ def main():
         time_stats(df)
         station_stats(df)
         trip_duration_stats(df)
-        user_stats(df)
+        if city in ["chicago","new york city"] : user_stats(df)
+        raw_data(df)
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
